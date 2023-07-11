@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { urlencoded } from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
 import { notFound, erorHandler } from './middleware/errorMiddleware.js';
@@ -10,7 +10,10 @@ connectDB();
 
 const app = express();
 
-app.use('/api/users', userRoutes)
+app.use(express.json()); //Note: To parse raw json
+app.use(express.urlencoded({ extended: true })); //Note: To send form data
+
+app.use('/api/users', userRoutes);
 
 app.get('/', (req, res) => res.send('server is ready'));
 

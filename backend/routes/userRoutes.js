@@ -4,12 +4,12 @@ import {
 	authUser,
 	registerUser,
 	logoutUser,
-	getUserprofile,
-	updateUserprofile,
+	getUserProfile,
+	updateUserProfile,
 } from "../controllers/userController.js";
 
-router.post("/", registerUser);
+router.post("/register", registerUser);
 router.post("/auth", authUser);
 router.post("/logout", logoutUser);
-router.route("/profile").get(getUserprofile).put(updateUserprofile);
+router.route("/profile").get(getUserProfile).put(updateUserProfile);
 export default router;

@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 import {
-	authUser,
+	loginUser,
 	registerUser,
 	logoutUser,
 	getUserProfile,
@@ -9,7 +9,7 @@ import {
 } from "../controllers/userController.js";
 
 router.post("/register", registerUser);
-router.post("/auth", authUser);
+router.post("/login", loginUser);
 router.post("/logout", logoutUser);
 router.route("/profile").get(getUserProfile).put(updateUserProfile);
 export default router;

@@ -2,20 +2,31 @@ import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
 import User from "../models/userModel.js"
 
-//@desc  Auth user/ser token
-// route POST /api/users/auth
-//@access Public
+// @desc Login user/set token
+// route POST /api/users/login
+// @access Public
 
-const authUser = asyncHandler(async (req, res) => {
-	res.status(200).json({ message: "Auth User" });
+const loginUser = asyncHandler(async (req, res) => {
+	const { email, password } = req.body;
+	const user = await User.findOne({ email: email });
+
+	if (!user) {
+		res.status(401);
+		throw new Error("Incorrect e-mail");
+	}
+	if (await user.matchPasswords(password)) {
+		res.status(401);
+		throw new Error("Incorrect password");
+	}
+	generateToken(res, user._id);
+	res.status(200).json({ message: `Login succesfull. Logged as: ${user.email}` });
 });
 
-//@desc  Register a new user
+// @desc Register a new user
 // route POST /api/users/register
-//@access Public
+// @access Public
 
 const registerUser = asyncHandler(async (req, res) => {
-	console.log(req.body);
 	const { email, password, typeOfUser, firstName, lastName, contactNumber } = req.body; //Getting user values
 	const userExists = await User.findOne({ email: email }); //Check if user exists based on email
 	if (userExists) {
@@ -27,10 +38,12 @@ const registerUser = asyncHandler(async (req, res) => {
 		email,
 		password,
 		typeOfUser,
-		firstName,
-		lastName,
-		contactNumber
-	}); //Create user
+		userDetails: {
+			firstName: 'aqmet',
+			lastName: 'basibuyuk',
+			contactNumber: '273489234',
+		}
+	}) //Create user
 
 	if (user) { //Check if user created succesfully
 		generateToken(res, user._id);
@@ -40,9 +53,9 @@ const registerUser = asyncHandler(async (req, res) => {
 			password: user.password,
 			typeOfUser: user.typeOfUser,
 			userDetails: {
-				firstName: user.firstName,
-				lastName: user.lastName,
-				contactNumber: user.contactNumber
+				firstName: user.userDetails.firstName,
+				lastName: user.userDetails.lastName,
+				contactNumber: user.userDetails.contactNumber
 			}
 		})
 	} //Note: Storing token in http cookie, not sending to db
@@ -52,28 +65,26 @@ const registerUser = asyncHandler(async (req, res) => {
 	}
 });
 
-//@desc  Logout user
+// @desc Logout user
 // route POST /api/users/logout
-//@access Public
+// @access Public
 
 const logoutUser = asyncHandler(async (req, res) => {
 	res.status(200).json({ message: "Logout  User" });
 });
 
-//@desc  Get user profile
-// route POST /api/users/profile
-//@access private
+// @desc Get user profile
+// route GET /api/users/profile
+// @access Private
 
 const getUserProfile = asyncHandler(async (req, res) => {
-	const testUser1 = User({ email: "testUser1@email.com", password: "testtest" })
-	console.log(testUser1.email);
-	res.status(200).json({ message: "User email: " + testUser1.email });
+	res.status(200).json({ message: "User email: " });
 });
 
 
-//@desc  Update user profile
-// route put  /api/users/auth
-//@access Private
+// @desc Update user profile
+// route PUT /api/users/login
+// @access Private
 
 const updateUserProfile = asyncHandler(async (req, res) => {
 
@@ -81,7 +92,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 });
 
 export {
-	authUser,
+	loginUser,
 	registerUser,
 	logoutUser,
 	getUserProfile,

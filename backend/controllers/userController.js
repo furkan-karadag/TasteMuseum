@@ -14,7 +14,7 @@ const loginUser = asyncHandler(async (req, res) => {
 		res.status(401);
 		throw new Error("Incorrect e-mail");
 	}
-	if (await user.matchPasswords(password)) {
+	if (!(await user.matchPasswords(password))) {
 		res.status(401);
 		throw new Error("Incorrect password");
 	}
@@ -27,7 +27,7 @@ const loginUser = asyncHandler(async (req, res) => {
 // @access Public
 
 const registerUser = asyncHandler(async (req, res) => {
-	const { email, password, typeOfUser, firstName, lastName, contactNumber } = req.body; //Getting user values
+	const { email, password, userType, userDetails } = req.body; //Getting user values
 	const userExists = await User.findOne({ email: email }); //Check if user exists based on email
 	if (userExists) {
 		res.status(400);
@@ -37,27 +37,19 @@ const registerUser = asyncHandler(async (req, res) => {
 	const user = await User.create({
 		email,
 		password,
-		typeOfUser,
-		userDetails: {
-			firstName: 'aqmet',
-			lastName: 'basibuyuk',
-			contactNumber: '273489234',
-		}
+		userType,
+		userDetails
 	}) //Create user
 
 	if (user) { //Check if user created succesfully
 		generateToken(res, user._id);
-		res.status(201).json({
-			_id: user._id,
-			email: user.email,
-			password: user.password,
-			typeOfUser: user.typeOfUser,
-			userDetails: {
-				firstName: user.userDetails.firstName,
-				lastName: user.userDetails.lastName,
-				contactNumber: user.userDetails.contactNumber
-			}
-		})
+		// res.status(201).json({
+		// 	_id: user._id,
+		// 	email: user.email,
+		// 	password: user.password,
+		// 	userType: user.userType,
+		// 	userDetails: user.userDetails
+		// })
 	} //Note: Storing token in http cookie, not sending to db
 	else {
 		res.status(400);
@@ -70,7 +62,12 @@ const registerUser = asyncHandler(async (req, res) => {
 // @access Public
 
 const logoutUser = asyncHandler(async (req, res) => {
-	res.status(200).json({ message: "Logout  User" });
+	res.cookie("jwt", "", {
+		httpOnly: true,
+		expires: new Date(0)
+	});
+
+	res.status(200).json({ message: "Logout succesfull" });
 });
 
 // @desc Get user profile
@@ -78,7 +75,14 @@ const logoutUser = asyncHandler(async (req, res) => {
 // @access Private
 
 const getUserProfile = asyncHandler(async (req, res) => {
-	res.status(200).json({ message: "User email: " });
+	const user = {
+		_id: req.user._id,
+		email: req.user.email,
+		firstName: req.user.userDetails.firstName,
+		lastName: req.user.userDetails.lastName,
+		contactNumber: req.user.userDetails.contactNumber
+	};
+	res.status(200).json({ message: `Email: ${user.email}, name: ${user.firstName}, surname: ${user.lastName}` });
 });
 
 
@@ -87,8 +91,22 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // @access Private
 
 const updateUserProfile = asyncHandler(async (req, res) => {
+	const user = await User.findById(req.user._id);
+	if (user) {
+		user.password = req.body.password || user.password;
+		user.userDetails = req.body.userDetails || user.userDetails;
 
-	res.status(200).json({ message: "Update User profile" });
+		const updatedUser = await user.save();
+		if (updatedUser) {
+			res.status(200).json({ message: "User profile updated" });
+		}
+		else {
+			res.status(401).json({ message: "Nothing has updated" });
+		}
+	} else {
+		res.status(400);
+		throw new Error("User not found");
+	}
 });
 
 export {

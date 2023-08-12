@@ -10,7 +10,7 @@ const Hero = () => {
                     <p className="tect-center mb-4">
                         This is me furkan emir  
                     </p> 
-                    <div className="d-flex">,
+                    <div className="d-flex">
                         <LinkContainer to='login'>
                         <Button variant="primary "  className="me-3">
                             Sign In

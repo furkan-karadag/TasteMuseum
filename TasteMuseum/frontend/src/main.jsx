@@ -15,7 +15,7 @@ const router = createBrowserRouter(
     <Route path='/' element={<App /> }>
       <Route index={true} path='/' element={<HomeScreen />} />
       <Route path='/login' element={<LoginScreen />} />
-      <Route  path='/Register' element ={<RegisterScreen />} />
+      <Route  path='/register' element ={<RegisterScreen />} />
     </Route>
   )
 );
@@ -24,6 +24,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
    <React.StrictMode>
       <RouterProvider router={ router } />
-    </React.StrictMode>,
+    </React.StrictMode>
   </Provider>   
 );

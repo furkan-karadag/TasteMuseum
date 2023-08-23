@@ -6,6 +6,7 @@ import FormContainer from '../components/FormContainer';
 import { useRegisterMutation  } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { toast } from "react-toastify";
+import Loader from "../components/Loader";
 
 const LoginScreen = () => {
     const [name, setName] = useState('');
@@ -16,10 +17,11 @@ const LoginScreen = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    const [register, {isLoading}] = useRegisterMutation ();
-
+    
     const { userInfo } = useSelector((state) => state.auth);
+   
+    const [register, { isLoading }] = useRegisterMutation();
+
     
     useEffect(() => {
         if (userInfo) {
@@ -29,13 +31,20 @@ const LoginScreen = () => {
 
     const sumbmitHandler = async (e) => {
         e.preventDefault();
-        try {
+        if (password !== confirmPassword) {
+            toast.error('Password do not match');
+        }
+        else {
+            try {
             const res = await register({ name, email, password, userType }).unwrap();
             dispatch(setCredentials({...res})); 
             navigate('/');
-        } catch (err) {
+            }
+            catch (err) {
             toast.error(err?.data?.message || err.error);
+            }
         }
+       
     };
 
     return (
@@ -94,6 +103,7 @@ const LoginScreen = () => {
                     </Form.Control>
                 </Form.Group>
 
+                {isLoading && <Loader/>}
 
                 <Button type="submit" variant="primary" className="mt-3">
                     Sign Up

@@ -1,0 +1,5 @@
+.logo {
+    width: 95px;   /* İstediğiniz genişliği burada belirleyebilirsiniz */
+    height: auto;   /* Yüksekliği otomatik ayarlamak için */
+    /* Diğer isteğe bağlı stil özelliklerini burada belirtebilirsiniz */
+}

@@ -5,10 +5,11 @@ import {useNavigate} from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useLogoutMutation } from '../slices/usersApiSlice';
 import { logout } from '../slices/authSlice';
+import './Header.css';
 
 const Header = () => {
     const { userInfo } = useSelector((state) => state.auth);
-    console.log(userInfo);
+    
    
     const dispatch = useDispatch();
     const navigate =useNavigate();
@@ -30,7 +31,12 @@ const Header = () => {
             <Navbar bg='dark' variant='dark' expand='lg' collapseOnSelect>
                 <Container>
                     <LinkContainer to='/'>
-                        <Navbar.Brand>TASTE MUSEUM</Navbar.Brand>
+                        <Navbar.Brand> <img
+                                src="/images/tastemuseumlogo.png"
+                                alt="Taste Museum Logo"
+                                className="logo"
+                            />
+                            TASTE MUSEUM</Navbar.Brand>
                     </LinkContainer>
                     <Navbar.Toggle aria-controls='basic-navbar-nav' />
                     <Navbar.Collapse id='basic-navbar-nav'>

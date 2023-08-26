@@ -5,12 +5,11 @@ import store from './store';
 import { Provider } from 'react-redux';
 import App from './App.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './index.css';
 import PrivateRoute from './components/PrivateRoute';
 import HomeScreen from './screens/HomeScreen.jsx';
-import LoginScreen from './screens/LoginScreen.jsx';
-import RegisterScreen from './screens/RegisterScreen.jsx';
-import ProfilScreen from './screens/ProfileScreen';
+import LoginScreen from './screens/Auth/LoginScreen.jsx';
+import RegisterScreen from './screens/Auth/RegisterScreen.jsx';
+import ProfilScreen from './screens/Auth/ProfileScreen';
 import Hero from './components/Hero';
 
 const router = createBrowserRouter(

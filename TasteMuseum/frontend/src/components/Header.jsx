@@ -3,8 +3,8 @@ import { FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 import { useDispatch, useSelector } from "react-redux";
 import {useNavigate} from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
-import { useLogoutMutation } from '../slices/userSlices/usersApiSlice';
-import { logout } from '../slices/userSlices/authSlice';
+import { useLogoutMutation } from '../slices/usersApiSlice';
+import { logout } from '../slices/authSlice';
 import './Header.css';
 
 const Header = () => {

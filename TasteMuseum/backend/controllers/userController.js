@@ -44,7 +44,13 @@ const registerUser = asyncHandler(async (req, res) => {
 
 	if (user) { //Check if user created succesfully
 		generateToken(res, user._id);
-
+		// res.status(201).json({
+		// 	_id: user._id,
+		// 	email: user.email,
+		// 	password: user.password,
+		// 	userType: user.userType,
+		// 	userDetails: user.userDetails
+		// })
 	} //Note: Storing token in http cookie, not sending to db
 	else {
 		res.status(400);

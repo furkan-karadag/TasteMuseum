@@ -5,7 +5,7 @@ const notFound = (req, res, next) => {
 
 }
 
-const errorHandler = (err, req, res, next) => {
+const erorHandler = (err, req, res, next) => {
     let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
     let message = err.message;
     if (err.name === 'CaseError' && err.kind === 'ObjectId') {
@@ -18,4 +18,4 @@ const errorHandler = (err, req, res, next) => {
     });
 }
 
-export { notFound, errorHandler };
+export { notFound, erorHandler };

@@ -7,6 +7,10 @@ const userSchema = mongoose.Schema(
             type: String,
             require: true,
         },
+        lastName: {
+            type: String,
+            require: true,
+        },
         email: {
             type: String,
             required: true,
@@ -20,17 +24,7 @@ const userSchema = mongoose.Schema(
             required: true,
             type: Number,
         },
-        userDetails: {
-            firstName: {
-                type: String,
-            },
-            lastName: {
-                type: String,
-            },
-            contactNumber: {
-                type: String,
-            }
-        }
+
     },
 
     {
@@ -38,6 +32,11 @@ const userSchema = mongoose.Schema(
     }
 );
 
+userSchema.methods.matchPassword = async function (enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Encrypt password using bcrypt
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) {
         next();
@@ -47,10 +46,6 @@ userSchema.pre('save', async function (next) {
     this.password = await bcrypt.hash(this.password, salt);
 });
 
-userSchema.methods.matchPasswords = async function (enteredPassword) {
-    return await bcrypt.compare(enteredPassword, this.password)
-}
-
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 
 export default User;

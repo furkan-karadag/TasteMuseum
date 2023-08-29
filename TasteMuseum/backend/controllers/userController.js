@@ -8,18 +8,22 @@ import User from "../models/userModel.js"
 
 const loginUser = asyncHandler(async (req, res) => {
 	const { email, password } = req.body;
-	const user = await User.findOne({ email: email });
 
-	if (!user) {
+	const user = await User.findOne({ email });
+
+	if (user && (await user.matchPassword(password))) {
+		generateToken(res, user._id);
+
+		res.json({
+			_id: user._id,
+			name: user.name,
+			lastName: user.lastName,
+			email: user.email,
+		});
+	} else {
 		res.status(401);
-		throw new Error("Incorrect e-mail");
+		throw new Error('Invalid email or password');
 	}
-	if (!(await user.matchPasswords(password))) {
-		res.status(401);
-		throw new Error("Incorrect password");
-	}
-	generateToken(res, user._id);
-	res.status(200).json({ message: `Login succesfull. Logged as: ${user.email}` });
 });
 
 // @desc Register a new user
@@ -27,7 +31,7 @@ const loginUser = asyncHandler(async (req, res) => {
 // @access Public
 
 const registerUser = asyncHandler(async (req, res) => {
-	const { name, email, password, userType, userDetails } = req.body; //Getting user values
+	const { name, lastName, email, password, userType, } = req.body; //Getting user values
 	const userExists = await User.findOne({ email: email }); //Check if user exists based on email
 	if (userExists) {
 		res.status(400);
@@ -36,14 +40,21 @@ const registerUser = asyncHandler(async (req, res) => {
 
 	const user = await User.create({
 		name,
+		lastName,
 		email,
 		password,
 		userType,
-		userDetails
+
 	}) //Create user
 
 	if (user) { //Check if user created succesfully
 		generateToken(res, user._id);
+		res.status(201).json({
+			_id: user._id,
+			name: user.name,
+			lastName: user.lastName,
+			email: user.email,
+		});
 
 	} //Note: Storing token in http cookie, not sending to db
 	else {
@@ -73,12 +84,13 @@ const getUserProfile = asyncHandler(async (req, res) => {
 	const user = {
 		_id: req.user._id,
 		email: req.user.email,
-		firstName: req.user.userDetails.firstName,
-		lastName: req.user.userDetails.lastName,
-		contactNumber: req.user.userDetails.contactNumber
+		name: req.user.name,
+		lastName: req.user.lastName,
+
 	};
-	res.status(200).json({ message: `Email: ${user.email}, name: ${user.firstName}, surname: ${user.lastName}` });
+	res.status(200).json({ message: `Email: ${user.email}, name: ${user.name}, surname: ${user.lastName}` });
 });
+
 
 
 // @desc Update user profile

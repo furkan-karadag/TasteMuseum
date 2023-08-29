@@ -12,11 +12,12 @@ body {
     flex-direction: column;
   }
   
+  
   footer {
-    text-align: center;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     width: 100%;
-    white-space: nowrap;
-    line-height: 60px;
+    background-color: #f0f0f0; /* Arka plan rengini istediğiniz renkle değiştirin */
+    padding: 10px;
+    text-align: center;
   }

@@ -16,25 +16,17 @@ const Hero = () => {
                         This is me furkan emir
                     </p> 
                     <div className="d-flex">
-                        {!userInfo && (
-                            <>
-                                <LinkContainer to='/login'>
-                                    <Button variant="primary" className="me-3">
-                                        Sign In
-                                    </Button>
-                                </LinkContainer>
-                                <LinkContainer to='/register'>
-                                    <Button variant="secondary">
-                                        Sign Up
-                                    </Button>
-                                </LinkContainer>
-                            </>
-                        )}
-                    </div>
+                        <Button variant='primary' href='/login' className='me-3'>
+                            Sign In
+                        </Button>
+                        <Button variant='secondary' href='/register'>
+                             Register
+                        </Button>
+                     </div>
                 </Card>
             </Container>
         </div>
-    );
+  );
 };
 
 export default Hero;

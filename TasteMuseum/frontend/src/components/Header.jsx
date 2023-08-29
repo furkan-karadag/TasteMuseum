@@ -20,9 +20,9 @@ const Header = () => {
         try {
             await logoutApicall().unwrap();
             dispatch(logout());
-            navigate('/');
+            navigate('/login');
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     };
 

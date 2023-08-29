@@ -10,6 +10,7 @@ import Loader from "../../components/Loader";
 
 const RegisterScreen = () => {
     const [name, setName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -36,7 +37,7 @@ const RegisterScreen = () => {
         }
         else {
             try {
-            const res = await register({ name, email, password, userType }).unwrap();
+            const res = await register({ name, lastName, email, password, userType }).unwrap();
             dispatch(setCredentials({...res})); 
             navigate('/');
             }
@@ -61,6 +62,17 @@ const RegisterScreen = () => {
                         onChange={(e) => setName(e.target.value)}>
                     </Form.Control>
                 </Form.Group>
+
+                <Form.Group className="my-2" controlId="lastName">
+                    <Form.Label>Last Name</Form.Label> 
+                    <Form.Control
+                        type='text'
+                        placeholder='Enter Last Name'
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}>
+                    </Form.Control>
+                </Form.Group>
+
 
             
                 <Form.Group className="my-2" controlId="email">
